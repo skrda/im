@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D I Love You Hart</title>
+    <style>
+        /* De donkere achtergrond voor het neon-effect */
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #0b0b0b; 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* De container die in 3D ronddraait */
+        #ui {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: draaien 15s linear infinite;
+        }
+
+        /* Het onzichtbare puntje op de hartlijn */
+        .love {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-style: preserve-3d;
+            /* Creëert de 'golf' animatie uit de video */
+            animation: kloppen 3s infinite alternate ease-in-out;
+        }
+
+        /* Dit is exact de CSS uit jouw screenshot! */
+        .love_word {
+            color: #ea80b0;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px #fff;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            position: absolute;
+            /* Zorgt dat de tekst schuin staat */
+            transform: translate(-50%, -50%) rotateZ(-30deg); 
+        }
+
+        /* Het hele hart langzaam om zijn as laten draaien */
+        @keyframes draaien {
+            0% { transform: rotateY(0deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(10deg); }
+        }
+
+        /* Zorgt voor een oplichtend en bewegend lint-effect */
+        @keyframes kloppen {
+            0% { transform: scale(0.9); opacity: 0.3; }
+            100% { transform: scale(1.1) translateZ(20px); opacity: 1; text-shadow: 0 0 20px #ea80b0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui"></div>
+
+    <script>
+        const ui = document.getElementById('ui');
+        const aantalWoorden = 100; // Het aantal zinnen dat de vorm opbouwt
+        
+        for (let i = 0; i < aantalWoorden; i++) {
+            // Wiskunde om de hartvorm te berekenen (cirkelberekening)
+            const t = (i / aantalWoorden) * Math.PI * 2;
+            
+            // De wiskundige X en Y coördinaten voor een hartkromme
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            
+            const schaal = 15; // Maakt het hart groter op het scherm
+            
+            // Maak het structuur-element aan
+            const loveDiv = document.createElement('div');
+            loveDiv.className = 'love';
+            
+            // Zet het element op de juiste X en Y positie
+            loveDiv.style.left = `${x * schaal}px`;
+            loveDiv.style.top = `${y * schaal}px`;
+            
+            // Voeg een golvende 3D diepte toe 
+            loveDiv.style.transform = `translateZ(${Math.sin(t * 8) * 30}px)`;
+            
+            // Vertraag de animatie voor elk woord, zodat er een visuele 'golf' ontstaat (net als in de video)
+            loveDiv.style.animationDelay = `${i * -0.1}s`;
+
+            // Maak het tekst-element aan
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'love_word';
+            wordDiv.innerText = "I <3 you babus";
+            
+            // Plak alles in elkaar
+            loveDiv.appendChild(wordDiv);
+            ui.appendChild(loveDiv);
+        }
+    </script>
+
+</body>
+</html>
